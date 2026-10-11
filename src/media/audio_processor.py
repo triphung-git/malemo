@@ -15,7 +15,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
-from src.config import get_config, resolve_path
+from src.config import get_config, resolve_binary, resolve_path
 from src.media.audio_downloader import AudioDownloader
 from src.processing.validator import classify_error
 from src.storage.json_storage import MetadataManager, atomic_write_json
@@ -76,10 +76,10 @@ class AudioProcessor:
         self.metadata_file = self.output_dir / "metadata.json"
 
         # Resolve binary paths
-        ffmpeg_name = self.config.get("paths", {}).get("ffmpeg_path", "ffmpeg.exe")
-        ffprobe_name = self.config.get("paths", {}).get("ffprobe_path", "ffprobe.exe")
-        self.ffmpeg_path = str(resolve_path(ffmpeg_name))
-        self.ffprobe_path = str(resolve_path(ffprobe_name))
+        ffmpeg_name = self.config.get("paths", {}).get("ffmpeg_path", "ffmpeg")
+        ffprobe_name = self.config.get("paths", {}).get("ffprobe_path", "ffprobe")
+        self.ffmpeg_path = str(resolve_binary(ffmpeg_name))
+        self.ffprobe_path = str(resolve_binary(ffprobe_name))
 
         # Metadata manager
         self.metadata_mgr = MetadataManager(self.metadata_file)

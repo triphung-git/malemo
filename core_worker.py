@@ -17,7 +17,7 @@ from typing import Any
 PROJECT_ROOT = Path(__file__).resolve().parent
 sys.path.insert(0, str(PROJECT_ROOT))
 
-from src.config import get_config, resolve_path
+from src.config import get_config, resolve_binary, resolve_path
 from src.media.audio_downloader import download_audio
 from src.media.audio_processor import AudioProcessor, Heartbeat
 from src.processing.validator import classify_error
@@ -27,8 +27,8 @@ if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8", errors="backslashreplace", line_buffering=True)
 
 CURRENT_DIR = str(PROJECT_ROOT)
-FFMPEG_PATH = str(resolve_path("ffmpeg.exe"))
-FFPROBE_PATH = str(resolve_path("ffprobe.exe"))
+FFMPEG_PATH = str(resolve_binary("ffmpeg"))
+FFPROBE_PATH = str(resolve_binary("ffprobe"))
 
 
 def load_tasks(input_file: str) -> list[dict[str, Any]]:

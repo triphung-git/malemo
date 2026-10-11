@@ -18,8 +18,8 @@ paths:
   models_dir: "models"
   global_index_path: "data/processed/metadata/processed_index.json"
   fallback_index_path: "processed_index.json"
-  ffmpeg_path: "ffmpeg.exe"
-  ffprobe_path: "ffprobe.exe"
+  ffmpeg_path: "ffmpeg"
+  ffprobe_path: "ffprobe"
 
 crawler:
   bot_name: "tiktok_crawler"

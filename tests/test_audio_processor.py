@@ -58,3 +58,28 @@ def test_clean_temp_files():
         assert not temp_file1.exists()
         assert not temp_file2.exists()
         assert valid_file.exists()
+
+
+def test_resolve_binary_cross_platform(monkeypatch):
+    from src.config import resolve_binary
+
+    # Case 1: On Linux/POSIX, even if ffprobe.exe exists in project root,
+    # resolve_binary must find the Linux system binary via shutil.which instead of the Windows .exe
+    monkeypatch.setattr("sys.platform", "linux")
+    monkeypatch.setattr("shutil.which", lambda cmd: f"/usr/bin/{cmd}" if cmd in {"ffprobe", "ffmpeg"} else None)
+
+    resolved_ffprobe = resolve_binary("ffprobe.exe")
+    assert resolved_ffprobe.as_posix() == "/usr/bin/ffprobe"
+    assert not str(resolved_ffprobe).endswith(".exe")
+
+    resolved_ffmpeg = resolve_binary("ffmpeg")
+    assert resolved_ffmpeg.as_posix() == "/usr/bin/ffmpeg"
+
+    # Case 2: Explicit absolute path
+    abs_path = Path("/custom/bin/ffprobe")
+    monkeypatch.setattr("pathlib.Path.is_file", lambda self: True)
+    monkeypatch.setattr("os.access", lambda path, mode: True)
+    resolved_custom = resolve_binary(abs_path)
+    assert resolved_custom.as_posix().endswith("/custom/bin/ffprobe")
+
+
